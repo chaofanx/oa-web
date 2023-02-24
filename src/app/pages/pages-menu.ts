@@ -2,22 +2,105 @@ import { NbMenuItem } from '@nebular/theme';
 
 export const MENU_ITEMS: NbMenuItem[] = [
   {
-    title: 'E-commerce',
-    icon: 'shopping-cart-outline',
+    title: '主页',
+    icon: 'home-outline',
     link: '/pages/dashboard',
     home: true,
   },
   {
-    title: 'IoT Dashboard',
-    icon: 'home-outline',
-    link: '/pages/iot-dashboard',
-  },
-  {
-    title: 'FEATURES',
+    title: 'Meeting',
     group: true,
   },
   {
-    title: 'Layout',
+    title: '组织管理',
+    icon: 'home-outline',
+    link: '/pages/dashboard',
+    children: [
+      {
+        title: '部门管理',
+        icon: 'home-outline',
+        link: '/pages/dashboard',
+      },
+      {
+        title: '角色管理',
+        icon: 'home-outline',
+        link: '/pages/dashboard',
+      },
+      {
+        title: '用户管理',
+        icon: 'home-outline',
+        link: '/pages/dashboard',
+      },
+    ],
+  },
+  {
+    title: '在线办公',
+    icon: 'home-outline',
+    link: '/pages/dashboard',
+    children: [
+      {
+        title: '审批任务',
+        icon: 'home-outline',
+        link: '/pages/dashboard',
+      },
+      {
+        title: '员工请假',
+        icon: 'home-outline',
+        link: '/pages/dashboard',
+      },
+      {
+        title: '违纪罚款',
+        icon: 'home-outline',
+        link: '/pages/dashboard',
+      },
+      {
+        title: '报销管理',
+        icon: 'home-outline',
+        link: '/pages/dashboard',
+      },
+    ],
+  },
+  {
+    title: '会议管理',
+    icon: 'home-outline',
+    link: '/pages/dashboard',
+    children: [
+      {
+        title: '会议室',
+        icon: 'home-outline',
+        link: '/pages/dashboard',
+      },
+      {
+        title: '线下会议',
+        icon: 'home-outline',
+        link: '/pages/dashboard',
+      },
+      {
+        title: '线上会议',
+        icon: 'home-outline',
+        link: '/pages/dashboard',
+      },
+    ],
+  },
+  {
+    title: '系统设置',
+    icon: 'home-outline',
+    link: '/pages/dashboard',
+    children: [
+      {
+        title: '系统设置',
+        icon: 'home-outline',
+        link: '/pages/dashboard',
+      },
+      {
+        title: '罚款类型',
+        icon: 'home-outline',
+        link: '/pages/dashboard',
+      },
+    ],
+  },
+  {
+    title: '布局',
     icon: 'layout-outline',
     children: [
       {
@@ -44,7 +127,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
     ],
   },
   {
-    title: 'Forms',
+    title: '表单',
     icon: 'edit-2-outline',
     children: [
       {
@@ -115,7 +198,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
     ],
   },
   {
-    title: 'Extra Components',
+    title: '额外组件',
     icon: 'message-circle-outline',
     children: [
       {
@@ -145,7 +228,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
     ],
   },
   {
-    title: 'Maps',
+    title: '地图',
     icon: 'map-outline',
     children: [
       {
@@ -167,25 +250,17 @@ export const MENU_ITEMS: NbMenuItem[] = [
     ],
   },
   {
-    title: 'Charts',
+    title: '图表',
     icon: 'pie-chart-outline',
     children: [
       {
         title: 'Echarts',
         link: '/pages/charts/echarts',
       },
-      {
-        title: 'Charts.js',
-        link: '/pages/charts/chartjs',
-      },
-      {
-        title: 'D3',
-        link: '/pages/charts/d3',
-      },
     ],
   },
   {
-    title: 'Editors',
+    title: '编辑器',
     icon: 'text-outline',
     children: [
       {
@@ -199,7 +274,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
     ],
   },
   {
-    title: 'Tables & Data',
+    title: '表格 & 数据',
     icon: 'grid-outline',
     children: [
       {
@@ -213,7 +288,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
     ],
   },
   {
-    title: 'Miscellaneous',
+    title: '杂项',
     icon: 'shuffle-2-outline',
     children: [
       {
