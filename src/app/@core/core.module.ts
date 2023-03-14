@@ -52,22 +52,16 @@ import { StatsProgressBarService } from './mock/stats-progress-bar.service';
 import { VisitorsAnalyticsService } from './mock/visitors-analytics.service';
 import { SecurityCamerasService } from './mock/security-cameras.service';
 import { MockDataModule } from './mock/mock-data.module';
+import { DepartmentData } from './data/department';
+import { DepartmentService } from './mock/department.service';
+import { RoleData } from './data/role';
+import { RoleService } from './mock/role.service';
 
 const socialLinks = [
   {
-    url: 'https://github.com/akveo/nebular',
+    url: 'https://github.com/chaofanx',
     target: '_blank',
     icon: 'github',
-  },
-  {
-    url: 'https://www.facebook.com/akveo/',
-    target: '_blank',
-    icon: 'facebook',
-  },
-  {
-    url: 'https://twitter.com/akveo_inc',
-    target: '_blank',
-    icon: 'twitter',
   },
 ];
 
@@ -91,6 +85,8 @@ const DATA_SERVICES = [
   { provide: StatsProgressBarData, useClass: StatsProgressBarService },
   { provide: VisitorsAnalyticsData, useClass: VisitorsAnalyticsService },
   { provide: SecurityCamerasData, useClass: SecurityCamerasService },
+  { provide: DepartmentData, useClass: DepartmentService },
+  { provide: RoleData, useClass: RoleService },
 ];
 
 export class NbSimpleRoleProvider extends NbRoleProvider {

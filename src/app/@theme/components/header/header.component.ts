@@ -5,6 +5,9 @@ import { UserData } from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { NbMenuItem } from '@nebular/theme/components/menu/menu.service';
+import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
+import { Md5 } from 'ts-md5';
 
 @Component({
   selector: 'ngx-header',
@@ -38,14 +41,30 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   currentTheme = 'default';
 
-  userMenu = [ { title: 'Profile' }, { title: 'Log out' } ];
+  userMenu: NbMenuItem[] = [
+    {
+      title: '个人资料',
+      link: '/profile',
+    },
+    {
+      title: '退出登陆',
+      link: '/auth/logout',
+    },
+   ];
 
   constructor(private sidebarService: NbSidebarService,
               private menuService: NbMenuService,
               private themeService: NbThemeService,
               private userService: UserData,
               private layoutService: LayoutService,
-              private breakpointService: NbMediaBreakpointsService) {
+              private breakpointService: NbMediaBreakpointsService,
+              private authService: NbAuthService) {
+    this.authService.onTokenChange()
+      .subscribe((token: NbAuthJWTToken) => {
+        if (token.isValid()) {
+          this.user = token.getPayload();
+        }
+      });
   }
 
   ngOnInit() {

@@ -20,6 +20,15 @@ import {
   NbToastrModule,
   NbWindowModule,
 } from '@nebular/theme';
+import { NbAuthJWTToken, NbAuthModule, NbPasswordAuthStrategy } from '@nebular/auth';
+import { AuthGuard } from './auth-guard.service';
+
+const formSetting = {
+  redirectDelay: 0,
+  showMessages: {
+    success: true,
+  },
+};
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,8 +46,46 @@ import {
     NbChatModule.forRoot({
       messageGoogleMapKey: 'AIzaSyA_wNuCzia92MAmdLRzmqitRGvCF7wCZPY',
     }),
+    NbAuthModule.forRoot({
+      strategies: [
+        NbPasswordAuthStrategy.setup({
+          name: 'email',
+          token: {
+            class: NbAuthJWTToken,
+            key: 'token',
+          },
+          baseEndpoint: 'http://localhost:8080',
+          login: {
+            endpoint: '/api/auth/login',
+            method: 'post',
+          },
+          register: {
+            endpoint: '/api/auth/register',
+            method: 'post',
+          },
+          logout: {
+            endpoint: '/api/auth/logout',
+            method: 'post',
+          },
+          requestPass: {
+            endpoint: '/api/auth/request-pass',
+            method: 'post',
+          },
+          resetPass: {
+            endpoint: '/api/auth/reset-pass',
+            method: 'post',
+          },
+        }),
+      ],
+      forms: {
+        login: formSetting,
+      },
+    }),
     CoreModule.forRoot(),
     ThemeModule.forRoot(),
+  ],
+  providers: [
+    AuthGuard,
   ],
   bootstrap: [AppComponent],
 })
