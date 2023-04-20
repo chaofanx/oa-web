@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { LocalDataSource } from 'ng2-smart-table';
-import { RoleData } from '../../../@core/data/role';
+import { RoleData } from '../../../core/data/role';
 
 @Component({
   selector: 'ngx-role',

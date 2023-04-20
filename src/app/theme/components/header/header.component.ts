@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
 
-import { UserData } from '../../../@core/data/users';
-import { LayoutService } from '../../../@core/utils';
+import { UserData } from '../../../core/data/users';
+import { LayoutService } from '../../../core/utils';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { NbMenuItem } from '@nebular/theme/components/menu/menu.service';
 import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
-import { Md5 } from 'ts-md5';
+import { User } from '../../../core/data/user';
 
 @Component({
   selector: 'ngx-header',
@@ -18,7 +18,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject<void>();
   userPictureOnly: boolean = false;
-  user: any;
+  user: User;
+  nickname: string;
+  picture: string;
 
   themes = [
     {
@@ -43,10 +45,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   userMenu: NbMenuItem[] = [
     {
-      title: '个人资料',
-      link: '/profile',
-    },
-    {
       title: '退出登陆',
       link: '/auth/logout',
     },
@@ -63,6 +61,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .subscribe((token: NbAuthJWTToken) => {
         if (token.isValid()) {
           this.user = token.getPayload();
+          this.userMenu.unshift({
+            title: this.user.loginId.nickname,
+            link: '/profile',
+          });
+          this.nickname = this.user.loginId.nickname;
+          this.picture = this.user.loginId.photo;
         }
       });
   }

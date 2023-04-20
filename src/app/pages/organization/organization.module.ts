@@ -5,7 +5,7 @@ import { DepartmentComponent } from './department/department.component';
 import { OrganizationRoutingModule, routedComponents } from './organization-routing.module';
 import { RouterModule } from '@angular/router';
 import { NbCardModule, NbIconModule, NbInputModule, NbTreeGridModule } from '@nebular/theme';
-import { ThemeModule } from '../../@theme/theme.module';
+import { ThemeModule } from '../../theme/theme.module';
 import { TablesRoutingModule } from '../tables/tables-routing.module';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { RoleComponent } from './role/role.component';

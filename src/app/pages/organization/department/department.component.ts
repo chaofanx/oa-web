@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LocalDataSource } from 'ng2-smart-table';
-import { DepartmentData } from '../../../@core/data/department';
+import { DepartmentData } from '../../../core/data/department';
 
 @Component({
   selector: 'ngx-department',
   templateUrl: './department.component.html',
   styleUrls: ['./department.component.scss'],
 })
-export class DepartmentComponent {
+export class DepartmentComponent implements OnInit {
   settings = {
     add: {
       addButtonContent: '<i class="nb-plus"></i>',
@@ -49,7 +49,9 @@ export class DepartmentComponent {
 
   source: LocalDataSource = new LocalDataSource();
 
-  constructor(private service: DepartmentData) {
+  constructor(private service: DepartmentData) {}
+
+  ngOnInit(): void {
     const data = this.service.getData();
     this.source.load(data);
   }

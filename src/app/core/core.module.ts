@@ -1,6 +1,6 @@
 import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NbAuthModule, NbDummyAuthStrategy } from '@nebular/auth';
+import { NbAuthJWTToken, NbAuthModule, NbAuthSimpleToken, NbPasswordAuthStrategy } from '@nebular/auth';
 import { NbSecurityModule, NbRoleProvider } from '@nebular/security';
 import { of as observableOf } from 'rxjs';
 
@@ -32,30 +32,37 @@ import { StatsProgressBarData } from './data/stats-progress-bar';
 import { VisitorsAnalyticsData } from './data/visitors-analytics';
 import { SecurityCamerasData } from './data/security-cameras';
 
-import { UserService } from './mock/users.service';
-import { ElectricityService } from './mock/electricity.service';
-import { SmartTableService } from './mock/smart-table.service';
-import { UserActivityService } from './mock/user-activity.service';
-import { OrdersChartService } from './mock/orders-chart.service';
-import { ProfitChartService } from './mock/profit-chart.service';
-import { TrafficListService } from './mock/traffic-list.service';
-import { EarningService } from './mock/earning.service';
-import { OrdersProfitChartService } from './mock/orders-profit-chart.service';
-import { TrafficBarService } from './mock/traffic-bar.service';
-import { ProfitBarAnimationChartService } from './mock/profit-bar-animation-chart.service';
-import { TemperatureHumidityService } from './mock/temperature-humidity.service';
-import { SolarService } from './mock/solar.service';
-import { TrafficChartService } from './mock/traffic-chart.service';
-import { StatsBarService } from './mock/stats-bar.service';
-import { CountryOrderService } from './mock/country-order.service';
-import { StatsProgressBarService } from './mock/stats-progress-bar.service';
-import { VisitorsAnalyticsService } from './mock/visitors-analytics.service';
-import { SecurityCamerasService } from './mock/security-cameras.service';
-import { MockDataModule } from './mock/mock-data.module';
+import { UserService } from './service/users.service';
+import { ElectricityService } from './service/electricity.service';
+import { SmartTableService } from './service/smart-table.service';
+import { UserActivityService } from './service/user-activity.service';
+import { OrdersChartService } from './service/orders-chart.service';
+import { ProfitChartService } from './service/profit-chart.service';
+import { TrafficListService } from './service/traffic-list.service';
+import { EarningService } from './service/earning.service';
+import { OrdersProfitChartService } from './service/orders-profit-chart.service';
+import { TrafficBarService } from './service/traffic-bar.service';
+import { ProfitBarAnimationChartService } from './service/profit-bar-animation-chart.service';
+import { TemperatureHumidityService } from './service/temperature-humidity.service';
+import { SolarService } from './service/solar.service';
+import { TrafficChartService } from './service/traffic-chart.service';
+import { StatsBarService } from './service/stats-bar.service';
+import { CountryOrderService } from './service/country-order.service';
+import { StatsProgressBarService } from './service/stats-progress-bar.service';
+import { VisitorsAnalyticsService } from './service/visitors-analytics.service';
+import { SecurityCamerasService } from './service/security-cameras.service';
+import { MockDataModule } from './service/mock-data.module';
 import { DepartmentData } from './data/department';
-import { DepartmentService } from './mock/department.service';
+import { DepartmentService } from './service/department.service';
 import { RoleData } from './data/role';
-import { RoleService } from './mock/role.service';
+import { RoleService } from './service/role.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NbAlertModule, NbButtonModule, NbCheckboxModule, NbIconModule, NbInputModule } from '@nebular/theme';
+import { RegisterComponent } from './component/register/register.component';
+import { LoginComponent } from './component/login/login.component';
+import { RequestPasswordComponent } from './component/request-password/request-password.component';
+import { RouterLinkWithHref } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 const socialLinks = [
   {
@@ -99,24 +106,58 @@ export class NbSimpleRoleProvider extends NbRoleProvider {
 export const NB_CORE_PROVIDERS = [
   ...MockDataModule.forRoot().providers,
   ...DATA_SERVICES,
-  ...NbAuthModule.forRoot({
-
+    ...NbAuthModule.forRoot({
     strategies: [
-      NbDummyAuthStrategy.setup({
+      NbPasswordAuthStrategy.setup({
         name: 'email',
-        delay: 3000,
+        token: {
+          class: NbAuthSimpleToken,
+          key: 'data',
+        },
+        errors: {
+          key: 'msg',
+        },
+        baseEndpoint: 'http://localhost:8080/api',
+        login: {
+          redirect: {
+            success: '/pages/dashboard',
+            failure: null,
+          },
+          endpoint: '/auth/login',
+          method: 'POST',
+        },
+        register: {
+          redirect: {
+            success: '/pages/dashboard',
+            failure: null,
+          },
+          endpoint: '/auth/register',
+          method: 'post',
+        },
+        logout: {
+          endpoint: '/auth/logout',
+          method: 'post',
+        },
+        requestPass: {
+          endpoint: '/auth/request-pass',
+          method: 'post',
+        },
+        resetPass: {
+          endpoint: '/auth/reset-pass',
+          method: 'post',
+        },
       }),
     ],
     forms: {
       login: {
         socialLinks: socialLinks,
-      },
-      register: {
-        socialLinks: socialLinks,
+        redirectDelay: 0,
+        showMessages: {
+          success: true,
+        },
       },
     },
   }).providers,
-
   NbSecurityModule.forRoot({
     accessControl: {
       guest: {
@@ -144,11 +185,24 @@ export const NB_CORE_PROVIDERS = [
 @NgModule({
   imports: [
     CommonModule,
+    ReactiveFormsModule,
+    NbIconModule,
+    NbCheckboxModule,
+    NbAlertModule,
+    FormsModule,
+    NbInputModule,
+    RouterLinkWithHref,
+    NbButtonModule,
+    HttpClientModule,
   ],
   exports: [
     NbAuthModule,
   ],
-  declarations: [],
+  declarations: [
+    RegisterComponent,
+    LoginComponent,
+    RequestPasswordComponent,
+  ],
 })
 export class CoreModule {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {

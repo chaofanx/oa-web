@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { LocalDataSource } from 'ng2-smart-table';
-import { UserService } from '../../../@core/mock/users.service';
+import { UserService } from '../../../core/service/users.service';
 
 @Component({
   selector: 'ngx-user',
