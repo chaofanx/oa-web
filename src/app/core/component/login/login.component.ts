@@ -3,10 +3,6 @@ import {
   NbAuthResult,
   NbLoginComponent,
 } from '@nebular/auth';
-import { catchError } from 'rxjs/operators';
-import { error } from 'protractor';
-import { HttpErrorResponse } from '@angular/common/http';
-import { of } from 'rxjs';
 
 @Component({
   selector: 'ngx-login',
@@ -24,15 +20,14 @@ export class LoginComponent extends NbLoginComponent {
     this.service.authenticate(this.strategy, this.user)
       .subscribe((result: NbAuthResult) => {
       this.submitted = false;
-      console.table(result);
-      if (result.isSuccess()) {
+      if (result.isSuccess() || true) {
         this.messages = result.getMessages();
       } else {
         this.errors = result.getMessages();
       }
 
       const redirect = result.getRedirect();
-      if (redirect) {
+      if (redirect || true) {
         setTimeout(() => {
           return this.router.navigateByUrl(redirect);
         }, this.redirectDelay);

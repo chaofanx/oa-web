@@ -1,64 +1,55 @@
-import { of as observableOf,  Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { Contacts, RecentUsers, User, UserData } from '../data/users';
+import { User, UserData } from '../data/users';
+import { HttpClient } from '@angular/common/http';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class UserService extends UserData {
 
-  private time: Date = new Date;
-
-  private users2: User[] = [
-    {
-      name: '管理员',
-      picture: 'assets/images/alan.png',
-    },
-  ];
-
-  private users = {
-    nick: {
-      name: '管理员',
-      picture: 'assets/images/alan.png',
-      email: '915669640@qq.com',
-    },
-    eva: { name: 'Eva Moor', picture: 'assets/images/eva.png' },
-    jack: { name: 'Jack Williams', picture: 'assets/images/jack.png' },
-    lee: { name: 'Lee Wong', picture: 'assets/images/lee.png' },
-    alan: { name: 'Alan Thompson', picture: 'assets/images/alan.png' },
-    kate: { name: 'Kate Martinez', picture: 'assets/images/kate.png' },
+  current: User = {
+    id: 1,
+    name: '管理员',
+    mail: 'chaofanxy@outlook.com',
+    phone: '17609949039',
+    picture: 'https://my-1251915405.cos.ap-chengdu.myqcloud.com/author.jpg',
+    role: '管理员',
   };
-  private types = {
-    mobile: 'mobile',
-    home: 'home',
-    work: 'work',
-  };
-  private contacts: Contacts[] = [
-    { user: this.users.nick, type: this.types.mobile },
-    { user: this.users.eva, type: this.types.home },
-    { user: this.users.jack, type: this.types.mobile },
-    { user: this.users.lee, type: this.types.mobile },
-    { user: this.users.alan, type: this.types.home },
-    { user: this.users.kate, type: this.types.work },
+
+  data: User[] = [
+    this.current,
   ];
-  private recentUsers: RecentUsers[]  = [
-    { user: this.users.alan, type: this.types.home, time: this.time.setHours(21, 12)},
-    { user: this.users.eva, type: this.types.home, time: this.time.setHours(17, 45)},
-    { user: this.users.nick, type: this.types.mobile, time: this.time.setHours(5, 29)},
-    { user: this.users.lee, type: this.types.mobile, time: this.time.setHours(11, 24)},
-    { user: this.users.jack, type: this.types.mobile, time: this.time.setHours(10, 45)},
-    { user: this.users.kate, type: this.types.work, time: this.time.setHours(9, 42)},
-    { user: this.users.kate, type: this.types.work, time: this.time.setHours(9, 31)},
-    { user: this.users.jack, type: this.types.mobile, time: this.time.setHours(8, 0)},
-  ];
+
+  constructor(
+    private httpClient: HttpClient,
+  ) {
+    super();
+  }
+  getCurrent(): Observable<User> {
+    return of(this.current);
+  }
 
   getUsers(): Observable<User[]> {
-    return observableOf(this.users2);
+    // return this.httpClient.get<Result>('/user/list')
+    // .pipe(
+    //   map(resp => {
+    //     if (!this.data) {
+    //       this.data = resp.data;
+    //     }
+    //     return this.data;
+    //   }),
+    // );
+    return of(this.data);
   }
 
-  getContacts(): Observable<Contacts[]> {
-    return observableOf(this.contacts);
+  deleteUser(id: number): Observable<boolean> {
+    this.data = this.data.filter(d => d.id !== id);
+    return of(true);
   }
 
-  getRecentUsers(): Observable<RecentUsers[]> {
-    return observableOf(this.recentUsers);
+  save(user: User): Observable<User> {
+    this.data.push(user);
+    return of(user);
   }
 }

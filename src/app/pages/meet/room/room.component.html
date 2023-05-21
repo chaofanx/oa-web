@@ -1,29 +1,64 @@
 <div class="row">
-    <div class="col-lg-6">
-        <nb-card>
+    <div class="col-md-12">
+        <nb-card *ngIf="!joined">
             <nb-card-header>加入房间</nb-card-header>
             <nb-card-body>
-                <div class="full-name-inputs">
-                    <input type="text" [(ngModel)]="userId" nbInput fullWidth placeholder="用户名">
-                    <input type="text" [(ngModel)]="roomId" nbInput fullWidth placeholder="房间号">
+                <div class="row">
+                    <input type="text" [(ngModel)]="userId" nbInput placeholder="用户名">
+                    <input type="text" [(ngModel)]="roomId" nbInput placeholder="房间号">
                 </div>
-                <button nbButton [status]="status" hero (click)="joinRoom()">
+                <div class="row">
+                    <nb-checkbox [(checked)]="camera">入会开启摄像头</nb-checkbox>
+                    <nb-checkbox [(checked)]="microphone">入会开启麦克风</nb-checkbox>
+                </div>
+                <button nbButton status="primary" hero (click)="joinRoom()">
                     join room
                 </button>
             </nb-card-body>
         </nb-card>
-        <nb-card>
-            <nb-card-header>远端视频</nb-card-header>
+        <nb-card *ngIf="joined">
             <nb-card-body>
-                <div id="remotetracks"></div>
-            </nb-card-body>
-        </nb-card>
-    </div>
-    <div class="col-lg-6">
-        <nb-card>
-            <nb-card-header>本地视频</nb-card-header>
-            <nb-card-body>
-                <div id="localtracks"></div>
+                <div class="row">
+                    <div class="video col-md-8">
+                        <div id="localTrack" class="little"></div>
+                        <div id="remoteTrack" class="big"></div>
+                        <div class="btn">
+                            <div [class]="disable" (click)="toggleMicrophone()">
+                                <img src="https://bu.dusays.com/2023/05/10/645b6c7f1b750.png" alt="camera.png" title="camera.png" />
+                            </div>
+                            <div [class]="disable" (click)="toggleCamera()">
+                                <img src="https://bu.dusays.com/2023/05/10/645b6cbe06a4c.png" alt="camera.png" title="camera.png" />
+                            </div>
+                            <div (click)="hangup()">
+                                <img src="https://bu.dusays.com/2023/05/10/645b620a4501b.png"
+                                     alt="hangup.png" title="hangup.png"/>
+                            </div>
+                            <div>a</div>
+                            <div>a</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <nb-chat size="medium">
+                            <ng-template nbChatTitle [context]="{ text: roomId }" let-data>
+                                <div>当前房间号: {{ data.text }}</div>
+                            </ng-template>
+                            <nb-chat-message *ngFor="let msg of messages"
+                                             [type]="msg.type"
+                                             [message]="msg.text"
+                                             [reply]="msg.reply"
+                                             [sender]="msg.user.name"
+                                             [date]="msg.date"
+                                             [files]="msg.files"
+                                             [quote]="msg.quote"
+                                             [latitude]="msg.latitude"
+                                             [longitude]="msg.longitude"
+                                             [avatar]="msg.user.avatar">
+                            </nb-chat-message>
+                            <nb-chat-form (send)="sendMessage($event)" [dropFiles]="true">
+                            </nb-chat-form>
+                        </nb-chat>
+                    </div>
+                </div>
             </nb-card-body>
         </nb-card>
     </div>

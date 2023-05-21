@@ -1,28 +1,47 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RoomComponent } from './room/room.component';
-import {MeetComponent} from './meet.component';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {MeetRoutingModule, routedComponents} from './meet-routing.module';
-import {FormsModule} from '@angular/forms';
-import { NbButtonModule, NbCardModule, NbInputModule } from '@nebular/theme';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  NbButtonModule, NbCalendarModule,
+  NbCardModule, NbChatModule, NbCheckboxModule,
+  NbDatepickerModule,
+  NbInputModule, NbSelectWithAutocompleteModule, NbTabsetModule,
+  NbTimepickerModule, NbToggleModule,
+} from '@nebular/theme';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
+import { ChatModule } from '../chat/chat.module';
+import { MeetDaySellComponent } from './meet-day-sell/meet-day-sell.component';
+import { DatePreviewComponent } from './date-preview/date-preview.component';
 
 
 @NgModule({
   declarations: [
     ...routedComponents,
-    RoomComponent,
-    MeetComponent,
+    MeetDaySellComponent,
+    DatePreviewComponent,
   ],
   imports: [
     CommonModule,
     RouterModule,
     MeetRoutingModule,
     FormsModule,
-    NbCardModule,
     NbInputModule,
     NbButtonModule,
+    NbDatepickerModule,
+    NbTimepickerModule,
+    NbCheckboxModule,
+    NbToggleModule,
+    NbSelectWithAutocompleteModule,
+    ReactiveFormsModule,
+    NgOptimizedImage,
+    ChatModule,
+    NbChatModule,
+    NbCardModule,
+    NbCalendarModule,
+    Ng2SmartTableModule,
+    NbTabsetModule,
   ],
 })
 export class MeetModule { }

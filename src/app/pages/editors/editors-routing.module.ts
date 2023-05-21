@@ -11,7 +11,8 @@ const routes: Routes = [{
   children: [{
     path: 'tinymce',
     component: TinyMCEComponent,
-  }, {
+  },
+  {
     path: 'ckeditor',
     component: CKEditorComponent,
   }],

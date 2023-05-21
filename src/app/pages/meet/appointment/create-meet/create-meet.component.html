@@ -1,0 +1,65 @@
+<nb-card>
+    <nb-card-header>添加会议</nb-card-header>
+    <nb-card-body>
+        <div class="form-control-group">
+            <div class="row">
+                <div class="col-sm-6">
+                    <label class="label" for="name">会议名称</label>
+                    <input  required
+                            [(ngModel)]="name"
+                            id="name"
+                            pattern="^(?=.*[a-zA-Z0-9\u4e00-\u9fa5])[\da-zA-Z\u4e00-\u9fa5]{5,}$"
+                            nbInput
+                            placeholder="名称"
+                    >
+                </div>
+                <div class="col-sm-6">
+                    <label for="datepicker" class="label">会议日期</label>
+                    <input required nbInput [(ngModel)]="date" id="datepicker" placeholder="日期"
+                           [nbDatepicker]="datePicker">
+                    <nb-datepicker #datePicker></nb-datepicker>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-6">
+                    <label class="label" for="startTime">开始时间</label>
+                    <input required nbInput id="startTime" placeholder="时间" [(ngModel)]="startTime"
+                           [nbTimepicker]="startTimePicker">
+                    <nb-timepicker #startTimePicker></nb-timepicker>
+                </div>
+                <div class="col-sm-6">
+                    <label class="label" for="startTime">结束时间</label>
+                    <input required nbInput id="endTime" placeholder="时间" [(ngModel)]="endTime"
+                           [nbTimepicker]="endTimePicker">
+                    <nb-timepicker #endTimePicker></nb-timepicker>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-6">
+                    <label for="attendee" class="label">参会人员</label><br>
+                    <nb-select fullWidth id="attendee" [(ngModel)]="attendees" multiple placeholder="参会人，多选">
+                        <nb-option *ngFor="let user of users" [value]="user.name">{{user.name}}</nb-option>
+                    </nb-select>
+                </div>
+                <div class="col-sm-3">
+                    <nb-toggle class="submit-btn" [(checked)]="online">在线会议</nb-toggle>
+                </div>
+            </div>
+            <div class="row">
+                <div *ngIf="!online" class="col-sm-6">
+                    <label for="room" class="label">会议室</label><br>
+                    <nb-select fullWidth id="room" [(ngModel)]="room" placeholder="会议室，多选">
+                        <nb-option *ngFor="let r of rooms" [value]="r.name">{{r.name}}</nb-option>
+                    </nb-select>
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+        <button nbButton class="submit-btn" status="danger" (click)="submit()">确认添加</button>
+    </nb-card-footer>
+</nb-card>

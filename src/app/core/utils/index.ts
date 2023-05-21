@@ -11,3 +11,9 @@ export {
   SeoService,
   StateService,
 };
+
+export interface Result {
+  state: number;
+  message: string;
+  data: any;
+}

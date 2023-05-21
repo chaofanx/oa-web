@@ -1,0 +1,29 @@
+<form [formGroup]="userForm" (ngSubmit)="submit()">
+    <nb-card>
+        <nb-card-header>{{isNew ? '新增用户' : '编辑用户'}}</nb-card-header>
+        <nb-card-body>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label class="label" for="name">姓名</label>
+                        <input formControlName="name" id="name" type="text" nbInput>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="label" for="mail">邮箱</label>
+                        <input formControlName="mail" id="mail" type="text" nbInput>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label class="label">手机号码
+                            <input formControlName="phone" type="text" nbInput>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </nb-card-body>
+        <nb-card-footer>
+            <button nbButton class="submit-btn" status="danger" [disabled]="!userForm.valid" type="submit">提交</button>
+        </nb-card-footer>
+    </nb-card>
+</form>

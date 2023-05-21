@@ -1,9 +1,10 @@
 import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
 import { DepartmentComponent } from './department/department.component';
-import { RoleComponent } from './role/role.component';
 import { UserComponent } from './user/user.component';
 import { OrganizationComponent } from './organization.component';
+import { UserEditComponent } from './user/user-edit/user-edit.component';
+import { RoleRenderComponent } from './user/role-render.component';
 
 const routes: Routes = [{
   path: '',
@@ -12,10 +13,6 @@ const routes: Routes = [{
     {
       path: 'dept',
       component: DepartmentComponent,
-    },
-    {
-      path: 'role',
-      component: RoleComponent,
     },
     {
       path: 'user',
@@ -32,4 +29,8 @@ export class OrganizationRoutingModule { }
 
 export const routedComponents = [
   DepartmentComponent,
+  UserComponent,
+  UserEditComponent,
+  RoleRenderComponent,
+  OrganizationComponent,
 ];

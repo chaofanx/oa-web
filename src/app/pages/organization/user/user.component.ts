@@ -1,15 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LocalDataSource } from 'ng2-smart-table';
 import { UserService } from '../../../core/service/users.service';
+import { NbDialogService, NbToastrService } from '@nebular/theme';
+import { UserEditComponent } from './user-edit/user-edit.component';
+import { RoleRenderComponent } from './role-render.component';
+import { ConfirmCardComponent } from '../../../core/component/confirm-card/confirm-card.component';
 
 @Component({
   selector: 'ngx-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
 })
-export class UserComponent {
+export class UserComponent implements OnInit {
 
   settings = {
+    mode: 'external',
+    actions: {
+      position: 'right',
+      columnTitle: '操作',
+    },
     add: {
       addButtonContent: '<i class="nb-plus"></i>',
       createButtonContent: '<i class="nb-checkmark"></i>',
@@ -27,30 +36,79 @@ export class UserComponent {
     columns: {
       name: {
         title: '用户名',
-        type: 'string',
+        type: 'text',
       },
-      picture: {
-        title: '头像',
-        type: 'string',
+      mail: {
+        title: '邮箱',
+        type: 'text',
+      },
+      phone: {
+        title: '电话',
+        type: 'text',
+      },
+      role: {
+        title: '角色',
+        type: 'custom',
+        renderComponent: RoleRenderComponent,
       },
     },
   };
 
-  source: LocalDataSource = new LocalDataSource();
+  source: LocalDataSource;
 
-  constructor(private service: UserService) {
-    const data = this.service.getUsers();
-    data.subscribe((res) => {
-      this.source.load(res);
+  constructor(
+    private service: UserService,
+    private dialogService: NbDialogService,
+    private toastrService: NbToastrService,
+  ) { }
+
+  ngOnInit() {
+    this.service.getUsers()
+      .subscribe((res) => {
+        this.source = new LocalDataSource(res);
+      });
+  }
+
+  onCreate() {
+    this.dialogService.open(UserEditComponent, {
+      context: {
+        isNew: true,
+        name: '',
+        mail: '',
+        phone: '',
+      },
+    }).onClose
+      .subscribe(user => {
+        this.service.getUsers().subscribe(data => {
+          this.source.load(data);
+        });
+      });
+  }
+
+  onDelete(event) {
+    this.dialogService.open(ConfirmCardComponent, {
+      context: {
+        title: '删除用户',
+        content: '确认删除用户？',
+        method: () => {
+          this.service.deleteUser(event.data.id)
+            .subscribe((res) => {
+              this.source.remove(event.data);
+              this.toastrService.success('删除成功', '提示');
+            });
+        },
+      },
     });
   }
 
-  onDeleteConfirm(event): void {
-    if (window.confirm('确定要删除吗?')) {
-      event.confirm.resolve();
-    } else {
-      event.confirm.reject();
-    }
+  onEdit(event) {
+    this.dialogService.open(UserEditComponent, {
+      context: {
+        isNew: false,
+        name: event.data.name.value,
+        mail: event.data.mail.value,
+        phone: event.data.phone.value,
+      },
+    });
   }
-
 }

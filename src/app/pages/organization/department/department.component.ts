@@ -1,14 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { LocalDataSource } from 'ng2-smart-table';
-import { DepartmentData } from '../../../core/data/department';
+import { DepartmentService } from '../../../core/service/department.service';
+import { Department } from '../../../core/data/department';
 
 @Component({
   selector: 'ngx-department',
   templateUrl: './department.component.html',
   styleUrls: ['./department.component.scss'],
 })
-export class DepartmentComponent implements OnInit {
+export class DepartmentComponent {
   settings = {
+    actions: {
+      position: 'right',
+      columnTitle: '操作',
+    },
     add: {
       addButtonContent: '<i class="nb-plus"></i>',
       createButtonContent: '<i class="nb-checkmark"></i>',
@@ -49,15 +54,29 @@ export class DepartmentComponent implements OnInit {
 
   source: LocalDataSource = new LocalDataSource();
 
-  constructor(private service: DepartmentData) {}
-
-  ngOnInit(): void {
-    const data = this.service.getData();
-    this.source.load(data);
+  constructor(
+    private service: DepartmentService,
+  ) {
+    this.service.getData()
+      .subscribe(data => {
+        this.source.load(data);
+      });
   }
 
-  onDeleteConfirm(event): void {
+  onDeleteConfirm(event) {
+    const data = event.data as Department;
     if (window.confirm('确定要删除部门吗?')) {
+      this.service.deleteById(data.id);
+      event.confirm.resolve();
+    } else {
+      event.confirm.reject();
+    }
+  }
+
+  save(event) {
+    const data = event.data as Department;
+    if (window.confirm('确定要保存吗?')) {
+      this.service.save(data);
       event.confirm.resolve();
     } else {
       event.confirm.reject();

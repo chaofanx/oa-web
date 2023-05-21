@@ -1,6 +1,6 @@
 import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NbAuthJWTToken, NbAuthModule, NbAuthSimpleToken, NbPasswordAuthStrategy } from '@nebular/auth';
+import { NbAuthModule, NbAuthSimpleToken, NbDummyAuthStrategy, NbPasswordAuthStrategy } from '@nebular/auth';
 import { NbSecurityModule, NbRoleProvider } from '@nebular/security';
 import { of as observableOf } from 'rxjs';
 
@@ -30,7 +30,6 @@ import { StatsBarData } from './data/stats-bar';
 import { CountryOrderData } from './data/country-order';
 import { StatsProgressBarData } from './data/stats-progress-bar';
 import { VisitorsAnalyticsData } from './data/visitors-analytics';
-import { SecurityCamerasData } from './data/security-cameras';
 
 import { UserService } from './service/users.service';
 import { ElectricityService } from './service/electricity.service';
@@ -50,19 +49,17 @@ import { StatsBarService } from './service/stats-bar.service';
 import { CountryOrderService } from './service/country-order.service';
 import { StatsProgressBarService } from './service/stats-progress-bar.service';
 import { VisitorsAnalyticsService } from './service/visitors-analytics.service';
-import { SecurityCamerasService } from './service/security-cameras.service';
 import { MockDataModule } from './service/mock-data.module';
 import { DepartmentData } from './data/department';
 import { DepartmentService } from './service/department.service';
-import { RoleData } from './data/role';
-import { RoleService } from './service/role.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NbAlertModule, NbButtonModule, NbCheckboxModule, NbIconModule, NbInputModule } from '@nebular/theme';
+import { NbAlertModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbIconModule, NbInputModule } from '@nebular/theme';
 import { RegisterComponent } from './component/register/register.component';
 import { LoginComponent } from './component/login/login.component';
 import { RequestPasswordComponent } from './component/request-password/request-password.component';
 import { RouterLinkWithHref } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
+import { ConfirmCardComponent } from './component/confirm-card/confirm-card.component';
 
 const socialLinks = [
   {
@@ -91,9 +88,7 @@ const DATA_SERVICES = [
   { provide: CountryOrderData, useClass: CountryOrderService },
   { provide: StatsProgressBarData, useClass: StatsProgressBarService },
   { provide: VisitorsAnalyticsData, useClass: VisitorsAnalyticsService },
-  { provide: SecurityCamerasData, useClass: SecurityCamerasService },
   { provide: DepartmentData, useClass: DepartmentService },
-  { provide: RoleData, useClass: RoleService },
 ];
 
 export class NbSimpleRoleProvider extends NbRoleProvider {
@@ -108,44 +103,44 @@ export const NB_CORE_PROVIDERS = [
   ...DATA_SERVICES,
     ...NbAuthModule.forRoot({
     strategies: [
-      NbPasswordAuthStrategy.setup({
+      NbDummyAuthStrategy.setup({
         name: 'email',
-        token: {
-          class: NbAuthSimpleToken,
-          key: 'data',
-        },
-        errors: {
-          key: 'msg',
-        },
-        baseEndpoint: 'http://localhost:8080/api',
-        login: {
-          redirect: {
-            success: '/pages/dashboard',
-            failure: null,
-          },
-          endpoint: '/auth/login',
-          method: 'POST',
-        },
-        register: {
-          redirect: {
-            success: '/pages/dashboard',
-            failure: null,
-          },
-          endpoint: '/auth/register',
-          method: 'post',
-        },
-        logout: {
-          endpoint: '/auth/logout',
-          method: 'post',
-        },
-        requestPass: {
-          endpoint: '/auth/request-pass',
-          method: 'post',
-        },
-        resetPass: {
-          endpoint: '/auth/reset-pass',
-          method: 'post',
-        },
+        // token: {
+        //   class: NbAuthSimpleToken,
+        //   key: 'data',
+        // },
+        // errors: {
+        //   key: 'msg',
+        // },
+        // baseEndpoint: environment.baseUrl,
+        // login: {
+        //   redirect: {
+        //     success: '/pages/dashboard',
+        //     failure: null,
+        //   },
+        //   endpoint: '/auth/login',
+        //   method: 'POST',
+        // },
+        // register: {
+        //   redirect: {
+        //     success: '/pages/dashboard',
+        //     failure: null,
+        //   },
+        //   endpoint: '/auth/register',
+        //   method: 'post',
+        // },
+        // logout: {
+        //   endpoint: '/auth/logout',
+        //   method: 'post',
+        // },
+        // requestPass: {
+        //   endpoint: '/auth/request-pass',
+        //   method: 'post',
+        // },
+        // resetPass: {
+        //   endpoint: '/auth/reset-pass',
+        //   method: 'post',
+        // },
       }),
     ],
     forms: {
@@ -194,6 +189,7 @@ export const NB_CORE_PROVIDERS = [
     RouterLinkWithHref,
     NbButtonModule,
     HttpClientModule,
+    NbCardModule,
   ],
   exports: [
     NbAuthModule,
@@ -202,6 +198,7 @@ export const NB_CORE_PROVIDERS = [
     RegisterComponent,
     LoginComponent,
     RequestPasswordComponent,
+    ConfirmCardComponent,
   ],
 })
 export class CoreModule {

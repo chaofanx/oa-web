@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
 
-import { UserData } from '../../../core/data/users';
 import { LayoutService } from '../../../core/utils';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { NbMenuItem } from '@nebular/theme/components/menu/menu.service';
-import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
-import { User } from '../../../core/data/user';
+import { NbAuthService } from '@nebular/auth';
+import { User } from '../../../core/data/users';
+import { UserService } from '../../../core/service/users.service';
 
 @Component({
   selector: 'ngx-header',
@@ -22,27 +22,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   nickname: string;
   picture: string;
 
-  themes = [
-    {
-      value: 'default',
-      name: 'Light',
-    },
-    {
-      value: 'dark',
-      name: 'Dark',
-    },
-    {
-      value: 'cosmic',
-      name: 'Cosmic',
-    },
-    {
-      value: 'corporate',
-      name: 'Corporate',
-    },
-  ];
-
-  currentTheme = 'default';
-
   userMenu: NbMenuItem[] = [
     {
       title: '退出登陆',
@@ -53,32 +32,35 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(private sidebarService: NbSidebarService,
               private menuService: NbMenuService,
               private themeService: NbThemeService,
-              private userService: UserData,
+              private userService: UserService,
               private layoutService: LayoutService,
               private breakpointService: NbMediaBreakpointsService,
               private authService: NbAuthService) {
-    this.authService.onTokenChange()
-      .subscribe((token: NbAuthJWTToken) => {
-        if (token.isValid()) {
-          this.user = token.getPayload();
-          this.userMenu.unshift({
-            title: this.user.loginId.nickname,
-            link: '/profile',
-          });
-          this.nickname = this.user.loginId.nickname;
-          this.picture = this.user.loginId.photo;
-        }
+    this.userService.getCurrent()
+      .subscribe(user => {
+        this.user = user;
+        this.userMenu.unshift({
+          title: this.user.name,
+          link: '/profile',
+        });
+        this.nickname = this.user.name;
+        this.picture = this.user.picture;
       });
+    // this.authService.onTokenChange()
+    //   .subscribe((token: NbAuthJWTToken) => {
+    //     if (token.isValid()) {
+    //       this.user = token.getPayload();
+    //       this.userMenu.unshift({
+    //         title: this.user.name,
+    //         link: '/profile',
+    //       });
+    //       this.nickname = this.user.name;
+    //       this.picture = this.user.picture;
+    //     }
+    //   });
   }
 
   ngOnInit() {
-    this.currentTheme = this.themeService.currentTheme;
-
-    this.userService.getUsers()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((users: any) => this.user = users.nick);
-
-    const { xl } = this.breakpointService.getBreakpointsMap();
     this.themeService.onMediaQueryChange()
       .pipe(
         map(([, currentBreakpoint]) => currentBreakpoint.width < xl),
@@ -86,21 +68,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
       )
       .subscribe((isLessThanXl: boolean) => this.userPictureOnly = isLessThanXl);
 
-    this.themeService.onThemeChange()
-      .pipe(
-        map(({ name }) => name),
-        takeUntil(this.destroy$),
-      )
-      .subscribe(themeName => this.currentTheme = themeName);
+    this.userService.getUsers()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((users: any) => this.user = users.nick);
+
+    const { xl } = this.breakpointService.getBreakpointsMap();
   }
 
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  changeTheme(themeName: string) {
-    this.themeService.changeTheme(themeName);
   }
 
   toggleSidebar(): boolean {
@@ -113,5 +90,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   navigateHome() {
     this.menuService.navigateHome();
     return false;
+  }
+
+  showBell() {
+    alert(1);
   }
 }
